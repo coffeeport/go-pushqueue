@@ -50,20 +50,20 @@ func NewPushRequest(o *Owner, code, body string) *http.Request {
 }
 
 func Push(o *Owner, code, body string) error {
-	r := o.NewPushRequest(code, body)
-	resp, err := http.Client.Do(r)
+	r := NewPushRequest(o, code, body)
+	resp, err := http.DefaultClient.Do(r)
 	if err != nil {
 		return err
 	}
 	v := new(PushResponse)
-	err = json.NewDecoder(r).Decode(v)
+	err = json.NewDecoder(resp.Body).Decode(v)
 	if err != nil {
 		resp.Body.Close()
-		return nil, err
+		return err
 	}
 	err = resp.Body.Close()
 	if err != nil {
-		return nil, err
+		return err
 	}
 	if v.Result != "success" {
 		return v
