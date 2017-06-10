@@ -9,6 +9,7 @@ import (
 )
 
 const (
+	StatusInvalidUUID         = "9000" // invalid UUID
 	StatusInvalidCode         = "9001" // there's no code
 	StatusInvalidSecretKey    = "9002" // invalid secret_key
 	StatusPushNotReady        = "9003" // latest push has not been completed
