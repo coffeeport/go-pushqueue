@@ -38,7 +38,7 @@ type Owner struct {
 	SecretKey string
 }
 
-func NewPushRequest(o *Owner, code, body string) *http.Request {
+func NewPushRequest(o *Owner, code, body string, useHttps bool) *http.Request {
 	v := make(url.Values, 4)
 	v.Set("uuid", o.UUID)
 	v.Set("secret_key", o.SecretKey)
@@ -47,11 +47,14 @@ func NewPushRequest(o *Owner, code, body string) *http.Request {
 
 	r, _ := http.NewRequest("POST", "http://push.doday.net/api/push",
 		strings.NewReader(v.Encode()))
+	if useHttps {
+		r.URL.Scheme = "https"
+	}
 	return r
 }
 
 func Push(o *Owner, code, body string) error {
-	r := NewPushRequest(o, code, body)
+	r := NewPushRequest(o, code, body, false)
 	resp, err := http.DefaultClient.Do(r)
 	if err != nil {
 		return err
